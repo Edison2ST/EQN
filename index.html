@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>EQN</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="jumbotron.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">EQN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/releases/download/v1.0.0/EQN.zip">Website (Offline)</a>
+                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/releases/download/v1.0.0/EQN.exe">Application (Windows)</a>
+                    </div>
+                </li>
+            </ul>
+            <a href="https://github.com/Edison2ST/EQN" target="_blank">
+                <button class="btn btn-outline-light">View on Github</button>
+            </a>
+        </div>
+    </nav>
+    <main role="main">
+        <p></p>
+        <center>
+            <p>EQN v. 1.0.0</p>
+            <div id="matrix1"></div><br />
+            <div id="matrix2"></div><br />
+            <div id="matrix3"></div>
+        </center>
+    </main>
+</body>
+<script>
+    document.getElementById("matrix1").innerHTML = "Size of matrix: <input type=\"text\" id=\"size\"><br /><br /><input type=\"submit\" class=\"btn btn-primary\" onclick=\"resize()\" value=\"Send\">";
+    var row;
+    var column;
+    function resize()
+    {
+        document.getElementById("matrix3").innerHTML = "";
+        var text = "";
+        row = parseInt(document.getElementById("size").value);
+        if (row > 20)
+        {
+            text = "Warning!!! The size of the matrix is over 20, and it could overload your computer. If you want to calculate it with larger matrices, consider downloading the <a href=\"#\">program in c++ (Windows only)</a>";
+        }
+        else if (row < 1 || !row)
+        {
+            text = "Wrong value.";
+        }
+        else
+        {
+            column = row+1;
+            for (var i = 0; i < row; i++)
+            {
+                for (var j = 0; j < column; j++)
+                {
+                    text += "x"+(i+1)+"-"+(j+1)+" <input type=\"text\" id=\"x"+i+"-"+j+"\"><br />";
+                }
+            }
+            text += "<br /><input type=\"submit\" class=\"btn btn-success\" onclick=\"calculate()\" value=\"Send\">";
+        }
+        document.getElementById("matrix2").innerHTML = text;
+    }
+    function calculate()
+    {
+        var matrix = new Array(row);
+        var text = "";
+        for (var i = 0; i < row; i++)
+        {
+            matrix[i] = new Array(column);
+            for (var j = 0; j < column; j++)
+            {
+                matrix[i][j] = parseFloat(document.getElementById("x"+i+"-"+j).value);
+                if (!matrix[i][j]) matrix[i][j] = 0.;
+            }
+        }
+        for (var i = 0; i < row; i++)
+        {
+            var use = matrix[i][i];
+            if (use == 0)
+            {
+                var j;
+                for (j = i+1; j < row; j++)
+                {
+                    if (matrix[j][i] != 0)
+                    {
+                        var oldmatrix, newmatrix;
+                        for (var k = 0; k < column; k++)
+                        {
+                            oldmatrix[k] = matrix[i][k];
+                            newmatrix[k] = matrix[j][k];
+                        }
+                        for (var k = 0; k < column; k++)
+                        {
+                            matrix[i][k] = newmatrix[k];
+                            matrix[j][k] = oldmatrix[k];
+                        }
+                        text += "<br />Exchanging rows...<br /><br />";
+                        for (var k = 0; k < column; k++)
+                        {
+                            text += "x"+(i+1)+"-"+(k+1)+" "+matrix[i][k]+"<br />";
+                        }
+                        for (var k = 0; k < column; k++)
+                        {
+                            text += "x"+(j+1)+"-"+(k+1)+" "+matrix[j][k]+"<br />";
+                        }
+                        break;
+                    }
+                }
+                if (j == row)
+                {
+                    text += "<br />0's, half of the Gauss-Jordan<br />";
+                    break;
+                }
+            }
+            use = matrix[i][i];
+            if (use != 1)
+            {
+                text += "<br />x"+(i+1)+"-"+(i+1)+" is not 1, divide it by "+use+". Result:<br />";
+                for (var j = 0; j < column; j++)
+                {
+                    matrix[i][j] /= use;
+                    text += "x"+(i+1)+"-"+(j+1)+" / "+use+" = "+matrix[i][j]+"<br />";
+                }
+            }
+            for (var j = i+1; j < row; j++)
+            {
+                var cons = matrix[j][i];
+                if (cons != 0)
+                {
+                    text += "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />";
+                    for (var k = i; k < column; k++)
+                    {
+                        matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
+                        text += "x"+(j+1)+"-"+(k+1)+" = "+matrix[j][k]+"<br />";
+                    }
+                }
+            }
+        }
+        for (var i = row-1; i >= 0; i--)
+        {
+            if (matrix[i][i] == 0)
+            {
+                break;
+            }
+            for (var j = i-1; j >= 0; j--)
+            {
+                var cons = matrix[j][i];
+                if (cons != 0)
+                {
+                    text += "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />";
+                    for (var k = i; k < column; k++)
+                    {
+                        matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
+                        text += "x"+(j+1)+"-"+(k+1)+" = "+matrix[j][k]+"<br />";
+                    }
+                }
+            }
+        }
+        text += "<br />Answer:<br /><br /><table class=\"table\"><thead class=\"thead-light\"><tr><th scope=\"col\"></th>";
+        for (var i = 0; i < column; i++)
+        {
+            text += "<th scope=\"col\"><strong>"+(i+1)+"</strong></th>";
+        }
+        text += "</tr></thead>";
+        for (var i = 0; i < row; i++)
+        {
+            text += "<tr>";
+            for (var j = -1; j < column; j++)
+            {
+                if (j == -1)
+                {
+                    text += "<td><strong>x"+(i+1)+"-</strong></td>";
+                }
+                else
+                {
+                    text += "<td>"+matrix[i][j]+"</td>";
+                }
+            }
+            text += "</tr>";
+        }
+        text += "</table>";
+        document.getElementById("matrix3").innerHTML = text;
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="jquery-slim.min.js"><\/script>')</script>
+<script src="popper.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<noscript>This website works with javascript, but your browser does not support javascript.</noscript>
