@@ -41,11 +41,11 @@ int main(int argc, char *argv[])
                     cout << endl << "Exchanging rows..." << endl << endl;
                     for (int k = 0; k < column; k++)
                     {
-                        cout << "x" << i+1 << "-" << k+1 << " " << matrix[i][k] << endl;
+                        cout << "x" << i+1 << "-" << k+1 << " = " << matrix[i][k] << endl;
                     }
                     for (int k = 0; k < column; k++)
                     {
-                        cout << "x" << j+1 << "-" << k+1 << " " << matrix[j][k] << endl;
+                        cout << "x" << j+1 << "-" << k+1 << " = " << matrix[j][k] << endl;
                     }
                     break;
                 }
