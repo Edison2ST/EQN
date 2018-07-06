@@ -91,7 +91,7 @@
                 {
                     if (matrix[j][i] != 0)
                     {
-                        var oldmatrix, newmatrix;
+                        var oldmatrix = newmatrix = new Array(column);
                         for (var k = 0; k < column; k++)
                         {
                             oldmatrix[k] = matrix[i][k];
@@ -105,11 +105,11 @@
                         text += "<br />Exchanging rows...<br /><br />";
                         for (var k = 0; k < column; k++)
                         {
-                            text += "x"+(i+1)+"-"+(k+1)+" "+matrix[i][k]+"<br />";
+                            text += "x"+(i+1)+"-"+(k+1)+" = "+matrix[i][k]+"<br />";
                         }
                         for (var k = 0; k < column; k++)
                         {
-                            text += "x"+(j+1)+"-"+(k+1)+" "+matrix[j][k]+"<br />";
+                            text += "x"+(j+1)+"-"+(k+1)+" = "+matrix[j][k]+"<br />";
                         }
                         break;
                     }
