@@ -6,7 +6,7 @@ This project was called EQN in reference to the ability of the program to solve 
 
 Javascript (website):
 
-- Add the number of rows and columns that you want to use (Ex: 2 rows and 3 columns), it must be less than 420 rows with columns, then press "Send".
+- Add the number of rows and columns that you want to use (Ex: 2 rows and 3 columns), it must be less or equal than 420 rows with columns, then press "Send".
 - x1-1 means first row and first column, x1-2 means first row and second column, x1-n means first row and nth column, x2-1 means second row and first column, xn-1 means nth row and first column, xn-n means nth row and nth column. Fill all those entries with your values. Negative numbers are valid. **NOTE: Put 0.25 instead of 1/4. This program does not work with fractions of numbers.**
 - Press "Send" and take a look to the answer and the step-by-step of the program!
 
