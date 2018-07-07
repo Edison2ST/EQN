@@ -5,9 +5,10 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     int row, column;
-    cout << "EQN v. 1.0.0" << endl << "Size of matrix" << endl;
+    cout << "EQN v. 1.1.0" << endl << "Size of matrix" << endl << "Rows: ";
     cin >> row;
-    column = row+1;
+    cout << "Columns: ";
+    cin >> column;
     double matrix[row][column];
     for(int i = 0; i < row; i++)
     {
