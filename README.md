@@ -12,7 +12,7 @@ Javascript (website):
 
 C++ (source code):
 
-This version is designed to have a good performance, therefore some features are not available
+This version is designed to have a good performance, therefore some features are not available.
 
 - Download the [source code](https://github.com/Edison2ST/EQN/archive/v1.2.0.zip), compile it and run the program.
 - Add the number of rows that you want to use, press "ENTER", and then add the number of columns that you want to use, press "ENTER".
