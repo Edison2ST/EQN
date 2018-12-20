@@ -7,7 +7,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">EQN v. 1.1.0</a>
+        <a class="navbar-brand" href="#">EQN v. 1.2.0</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,15 +15,20 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/releases/download/v1.1.0/EQN.zip">Website (Offline)</a>
-                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/releases/download/v1.1.0/EQN.exe">Application (Windows)</a>
+                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/releases/download/v1.2.0/EQN.zip" id="dropdown010"></a>
+                        <a class="dropdown-item" href="https://github.com/Edison2ST/EQN/archive/v1.2.0.zip" id="dropdown011"></a>
                     </div>
                 </li>
             </ul>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="curr_lang">
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" id="langs"></div>
+            </div>&nbsp;&nbsp;
             <a href="https://github.com/Edison2ST/EQN" target="_blank">
-                <button class="btn btn-outline-light">View on Github</button>
+                <button class="btn btn-outline-light" id="view"></button>
             </a>
         </div>
     </nav>
@@ -37,9 +42,39 @@
     </main>
 </body>
 <script>
-    document.getElementById("matrix1").innerHTML = "Size of matrix:<br /><br />Rows: <input type=\"text\" id=\"in_row\" /><br />Columns: <input type=\"text\" id=\"in_column\" /><br /><br /><input type=\"submit\" class=\"btn btn-primary\" onclick=\"resize()\" value=\"Send\" />";
-    var row;
-    var column;
+    // base64 images for the flags
+    var en = "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";
+    var es = "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";
+    var loc = window.location.href;
+    if (loc.substr(-3, 1) == "#") lang = loc.substr(-2); // if the URL contains # at -3 position, then lang will be from -2 position of the URL
+    else lang = (navigator.language || navigator.userLanguage).substr(0, 2); // else lang will be the first two letters of the navigator's language
+    document.getElementById("langs").innerHTML = "<a href=\"#en\" style=\"text-decoration: none\"><button class=\"dropdown-item\" type=\"button\" onclick=\"changeLanguage('en')\"><img src=\"data:image/jpg;base64, "+en+"\"> &nbsp;English</button></a><a href=\"#es\" style=\"text-decoration: none\"><button class=\"dropdown-item\" type=\"button\" onclick=\"changeLanguage('es')\"><img src=\"data:image/jpg;base64, "+es+"\"> &nbsp;Espa&ntilde;ol</button></a>";
+    changeLanguage(lang); // use the language in lang
+    function changeLanguage(language)
+    {
+        if (language == "es")
+        {
+            document.getElementById("dropdown01").innerHTML = "Descargar"
+            document.getElementById("dropdown010").innerHTML = "Sitio web (sin conexi&oacute;n)"
+            document.getElementById("dropdown011").innerHTML = "C&oacute;digo fuente (C++)"
+            document.getElementById("curr_lang").innerHTML = "<img src=\"data:image/jpg;base64, "+es+"\">&nbsp; Espa&ntilde;ol";
+            document.getElementById("view").innerHTML = "Ver en Github"
+            document.getElementById("matrix1").innerHTML = "Tama&ntilde;o de la matriz:<br /><br />Filas: <input type=\"text\" id=\"in_row\" /><br />Columnas: <input type=\"text\" id=\"in_column\" /><br /><br /><input type=\"submit\" class=\"btn btn-primary\" onclick=\"resize()\" value=\"Enviar\" />";
+        }
+        else
+        {
+            document.getElementById("dropdown01").innerHTML = "Download"
+            document.getElementById("dropdown010").innerHTML = "Website (offline)"
+            document.getElementById("dropdown011").innerHTML = "Source code (C++)"
+            document.getElementById("curr_lang").innerHTML = "<img src=\"data:image/jpg;base64, "+en+"\">&nbsp; English";
+            document.getElementById("view").innerHTML = "View on Github"
+            document.getElementById("matrix1").innerHTML = "Size of matrix:<br /><br />Rows: <input type=\"text\" id=\"in_row\" /><br />Columns: <input type=\"text\" id=\"in_column\" /><br /><br /><input type=\"submit\" class=\"btn btn-primary\" onclick=\"resize()\" value=\"Send\" />";
+        }
+        document.getElementById("matrix2").innerHTML = "";
+        document.getElementById("matrix3").innerHTML = "";
+        lang = language; // We will use it in resize() and calculate()
+        warn = false; // To use in resize() as a warning
+    }
     function resize()
     {
         document.getElementById("matrix3").innerHTML = "";
@@ -48,27 +83,28 @@
         column = parseInt(document.getElementById("in_column").value);
         if (row < 1 || !row || column < 1 || !column)
         {
-            text = "Wrong value.";
+            if (lang == "es") text = "Entrada no válida.";
+            else text = "Wrong value.";
+            warn = false;
         }
-        else if (row > 420 || column > 420 || row*column > 420)
+        else if (!warn && (row > 420 || column > 420 || row*column > 420))
         {
-            text = "Warning!!! The size of the matrix is over 420 rows with columns, and it could overload your computer. If you want to calculate it with larger matrices, consider downloading the <a href=\"https://github.com/Edison2ST/EQN/releases/download/v1.1.0/EQN.exe\">program in c++ (Windows only)</a>.";
+            if (lang == "es") text = "¡Advertencia! El tamaño de la matriz es mayor que 420 filas con columnas, y podría sobrecargar tu navegador. Si deseas omitir esta advertencia, presiona &quot;Enviar&quot; nuevamente."
+            else text = "Warning! The size of the matrix is greater than 420 rows with columns, and it could overload your browser. If you want to omit this warning, press &quot;Send&quot; again.";
+            warn = true;
         }
         else
         {
-            for (var i = 0; i < row; i++)
-            {
-                for (var j = 0; j < column; j++)
-                {
-                    text += "x"+(i+1)+"-"+(j+1)+" <input type=\"text\" id=\"x"+i+"-"+j+"\" /><br />";
-                }
-            }
-            text += "<br /><input type=\"submit\" class=\"btn btn-success\" onclick=\"calculate()\" value=\"Send\" />";
+            for (var i = 0; i < row; i++) for (var j = 0; j < column; j++) text += "x"+(i+1)+"-"+(j+1)+" <input type=\"text\" id=\"x"+i+"-"+j+"\" /><br />";
+            if (lang == "es") text += "<br /><input type=\"submit\" class=\"btn btn-success\" onclick=\"calculate()\" value=\"Enviar\" />";
+            else text += "<br /><input type=\"submit\" class=\"btn btn-success\" onclick=\"calculate()\" value=\"Send\" />";
+            warn = false;
         }
         document.getElementById("matrix2").innerHTML = text;
     }
     function calculate()
     {
+        // First, put all the values in the variable "matrix"
         var matrix = new Array(row);
         var text = "";
         for (var i = 0; i < row; i++)
@@ -80,62 +116,52 @@
                 if (!matrix[i][j]) matrix[i][j] = 0.;
             }
         }
+        // Start calculating
         for (var i = 0; i < row; i++)
         {
-            var use = matrix[i][i];
-            if (use == 0)
+            var use = matrix[i][i]; // Get the position of the matrix at the same number of row and column, ex: x1-1, x2-2, x3-3, etc
+            if (use == 0) // If use is equal to 0, try to exchange rows
             {
                 var j;
-                for (j = i+1; j < row; j++)
+                for (j = i+1; j < row; j++) // Start at the next row trying to exchange rows. It will perform some operations later, so it will check only next rows and not previous rows
                 {
-                    if (matrix[j][i] != 0)
+                    if (matrix[j][i] != 0) // If true, then it is possible to exchange rows
                     {
                         var oldmatrix = new Array(column);
-                        var newmatrix = new Array(column);
+                        for (var k = 0; k < column; k++) oldmatrix[k] = matrix[i][k];
                         for (var k = 0; k < column; k++)
                         {
-                            oldmatrix[k] = matrix[i][k];
-                            newmatrix[k] = matrix[j][k];
-                        }
-                        for (var k = 0; k < column; k++)
-                        {
-                            matrix[i][k] = newmatrix[k];
+                            matrix[i][k] = matrix[j][k];
                             matrix[j][k] = oldmatrix[k];
                         }
-                        text += "<br />Exchanging rows...<br /><br />";
-                        for (var k = 0; k < column; k++)
-                        {
-                            text += "x"+(i+1)+"-"+(k+1)+" = "+matrix[i][k]+"<br />";
-                        }
-                        for (var k = 0; k < column; k++)
-                        {
-                            text += "x"+(j+1)+"-"+(k+1)+" = "+matrix[j][k]+"<br />";
-                        }
+                        use = matrix[i][i];
+                        text += lang != "es" ? "<br />Exchanging rows...<br /><br />" : "<br />Intercambiando filas...<br /><br />";
+                        for (var k = 0; k < column; k++) text += "x"+(i+1)+"-"+(k+1)+" = "+matrix[i][k]+"<br />";
+                        for (var k = 0; k < column; k++) text += "x"+(j+1)+"-"+(k+1)+" = "+matrix[j][k]+"<br />";
                         break;
                     }
                 }
-                if (j == row)
+                if (j == row) // If true, then it is not possible to exchange rows
                 {
-                    text += "<br />0's, half of the Gauss-Jordan<br />";
-                    break;
+                    text += lang != "es" ? "<br />Zeros, half of the Gauss-Jordan<br />" : "<br />Ceros, mitad del Gauss-Jordan<br />";
+                    break; // And stop calculating, because it could alter the answer
                 }
             }
-            use = matrix[i][i];
-            if (use != 1)
+            if (use != 1) // If true, divide all the row by use, so use will be 1 too
             {
-                text += "<br />x"+(i+1)+"-"+(i+1)+" is not 1, divide it by "+use+". Result:<br />";
+                text += lang != "es" ? "<br />x"+(i+1)+"-"+(i+1)+" is not 1, divide it by "+use+". Result:<br />" : "<br />x"+(i+1)+"-"+(i+1)+" no es 1, divídase por "+use+". Resultado:<br />";
                 for (var j = 0; j < column; j++)
                 {
                     matrix[i][j] /= use;
                     text += "x"+(i+1)+"-"+(j+1)+" / "+use+" = "+matrix[i][j]+"<br />";
                 }
             }
-            for (var j = i+1; j < row; j++)
+            for (var j = i+1; j < row; j++) // Check the values in the same column, but in the next rows. We need them to be 0
             {
                 var cons = matrix[j][i];
-                if (cons != 0)
+                if (cons != 0) // If true, perform operations to be 0
                 {
-                    text += "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />";
+                    text += lang != "es" ? "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />" : "<br />x"+(j+1)+"-"+(i+1)+" no es 0, realice x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, donde k es cada columna de x"+(j+1)+". Resultado:<br />";
                     for (var k = i; k < column; k++)
                     {
                         matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
@@ -144,18 +170,16 @@
                 }
             }
         }
+        // We have finished the first half, we need some values in the second half to be 0
         for (var i = row-1; i >= 0; i--)
         {
-            if (matrix[i][i] == 0)
-            {
-                break;
-            }
+            if (matrix[i][i] == 0) break; // Because it could alter the answer
             for (var j = i-1; j >= 0; j--)
             {
                 var cons = matrix[j][i];
-                if (cons != 0)
+                if (cons != 0) // Perform operations to be 0
                 {
-                    text += "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />";
+                    text += lang != "es" ? "<br />x"+(j+1)+"-"+(i+1)+" is not 0, do x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, where k is every column of x"+(j+1)+". Result:<br />" : "<br />x"+(j+1)+"-"+(i+1)+" no es 0, realice x"+(j+1)+"-k = -x"+(j+1)+"-"+(i+1)+"*x"+(i+1)+"-k+x"+(j+1)+"-k, donde k es cada columna de x"+(j+1)+". Resultado:<br />";
                     for (var k = i; k < column; k++)
                     {
                         matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
@@ -164,25 +188,17 @@
                 }
             }
         }
-        text += "<br />Answer:<br /><br /><table class=\"table\"><thead class=\"thead-light\"><tr><th scope=\"col\"></th>";
-        for (var i = 0; i < column; i++)
-        {
-            text += "<th scope=\"col\"><strong>"+(i+1)+"</strong></th>";
-        }
+        // Done, now print the answer on the screen
+        text += (lang != "es" ? "<br />Answer" : "<br />Respuesta") + ":<br /><br /><table class=\"table\"><thead class=\"thead-light\"><tr><th scope=\"col\"></th>";
+        for (var i = 0; i < column; i++) text += "<th scope=\"col\"><strong>"+(i+1)+"</strong></th>";
         text += "</tr></thead>";
         for (var i = 0; i < row; i++)
         {
             text += "<tr>";
             for (var j = -1; j < column; j++)
             {
-                if (j == -1)
-                {
-                    text += "<td><strong>x"+(i+1)+"-</strong></td>";
-                }
-                else
-                {
-                    text += "<td>"+matrix[i][j]+"</td>";
-                }
+                if (j == -1) text += "<td><strong>x"+(i+1)+"-</strong></td>";
+                else text += "<td>"+matrix[i][j]+"</td>";
             }
             text += "</tr>";
         }
