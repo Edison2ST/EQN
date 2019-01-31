@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
             double cons = matrix[j][i];
             if (cons != 0) // If true, perform operations to be 0
             {
-                cout << endl << "x" << j+1 << "-" << i+1 << " is not 0, do x" << j+1 << "-k = -x" << j+1 << "-" << i+1 << "*x" << i+1 << "-k+x" << j+1 << "-k, where k is every column of x" << j+1 << ". Result:" << endl;
+                cout << endl << "x" << j+1 << "-" << i+1 << " is not 0, do x" << j+1 << "-k = -x" << j+1 << "-" << i+1 << "*x" << i+1 << "-k+x" << j+1 << "-k, where k is each column. Result:" << endl;
                 for (int k = i; k < column; k++)
                 {
                     matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
             double cons = matrix[j][i];
             if (cons != 0) // Perform operations to be 0
             {
-                cout << endl << "x" << j+1 << "-" << i+1 << " is not 0, do x" << j+1 << "-k = -x" << j+1 << "-" << i+1 << "*x" << i+1 << "-k+x" << j+1 << "-k, where k is every column of x" << j+1 << ". Result:" << endl;
+                cout << endl << "x" << j+1 << "-" << i+1 << " is not 0, do x" << j+1 << "-k = -x" << j+1 << "-" << i+1 << "*x" << i+1 << "-k+x" << j+1 << "-k, where k is each column. Result:" << endl;
                 for (int k = i; k < column; k++)
                 {
                     matrix[j][k] = -cons*matrix[i][k]+matrix[j][k];
