@@ -5,7 +5,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     int row, column;
-    cout << "EQN v. 1.2.0" << endl << "Size of matrix" << endl << "Rows: ";
+    cout << "EQN v. 1.2.1" << endl << "Size of matrix" << endl << "Rows: ";
     cin >> row;
     cout << "Columns: ";
     cin >> column;
